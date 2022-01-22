@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Usage: use <url> | <username/repo:file>
+
+use() {
+    url="$1"
+    echo "$1" | grep "://" > /dev/null || url="$(curl -s https://api.github.com/repos/${1%%:*}/contents/${1##*:} | grep download_url | cut -d\" -f4)"
+    filename="${XDG_CACHE_DIR:-$HOME/.cache}/use/$(echo "$1" | sha256sum | head -c 40)"
+    [ ! -r "$filename" ] && curl -sfL --create-dirs -o "$filename" "$url"
+    . "$filename"
+}
