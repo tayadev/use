@@ -23,3 +23,10 @@ use() {
     [ -r "$filename" ] || get "$1" "$filename"
     . "$filename"
 }
+
+
+if [ "$(basename "$0" .sh)" = "use" ]; then
+    entrypoint="$1"
+    shift
+    . "$entrypoint"
+fi
