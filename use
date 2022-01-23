@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# Usage:    use <url>
-#           use @gh/<user>/<repo>[:path/to/file]
-
 github() {
     user=${1%%/*}
     repo=${1#*/}; repo=${repo%:*}
@@ -12,14 +9,13 @@ github() {
 
 get() {
     url="$1"
-
     if [ -z "${1%@*}" ]; then
         case ${1%%/*} in
             @gh) url="$(github "${1#*/}")"
         esac
     fi
-
     curl -sfL --create-dirs -o "$2" "$url"
+    if [ $? -ne 0 ]; then echo "[use] Couldn't resolve module $1"; exit 1; fi
 }
 
 use() {
