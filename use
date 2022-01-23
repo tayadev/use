@@ -1,11 +1,31 @@
 #!/bin/sh
 
-# Usage: use <url> | <username/repo:file>
+# Usage:    use <url>
+
+# url aliases/expansions:
+#   @gh/user/repo[:path/to/file]
+
+github() {
+    user=${1%%/*}
+    repo=${1#*/}; repo=${repo%:*}
+    file=${1#*:}; [ "$file" = "$1" ] && file="$repo"
+    curl -s "https://api.github.com/repos/$user/$repo/contents/$file" | grep download_url | cut -d\" -f4
+}
+
+get() {
+    url="$1"
+
+    if [ -z "${1%@*}" ]; then
+        case ${1%%/*} in
+            @gh) url="$(github "${1#*/}")"
+        esac
+    fi
+
+    curl -sfL --create-dirs -o "$2" "$url"
+}
 
 use() {
-    url="$1"
-    echo "$1" | grep "://" > /dev/null || url="$(curl -s https://api.github.com/repos/${1%%:*}/contents/${1##*:} | grep download_url | cut -d\" -f4)"
     filename="${XDG_CACHE_DIR:-$HOME/.cache}/use/$(echo "$1" | sha256sum | head -c 40)"
-    [ ! -r "$filename" ] && curl -sfL --create-dirs -o "$filename" "$url"
+    [ -r "$filename" ] || get "$1" "$filename"
     . "$filename"
 }
