@@ -7,7 +7,7 @@
 
 . "$(command -v use)"
 
-use 'tayadev/ShellStuff:textstyle.sh'
+use '@gh/tayadev/ShellStuff:textstyle.sh'
 
 echo "${green}If this text is colored is works :)$reset"
 ```

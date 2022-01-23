@@ -1,9 +1,7 @@
 #!/bin/sh
 
 # Usage:    use <url>
-
-# url aliases/expansions:
-#   @gh/user/repo[:path/to/file]
+#           use @gh/<user>/<repo>[:path/to/file]
 
 github() {
     user=${1%%/*}
