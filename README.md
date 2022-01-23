@@ -3,9 +3,7 @@
 ## Example
 
 ```sh
-#!/bin/sh
-
-. "$(command -v use)"
+#!/usr/bin/env use
 
 use '@gh/tayadev/ShellStuff:textstyle.sh'
 
